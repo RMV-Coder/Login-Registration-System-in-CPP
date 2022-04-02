@@ -30,6 +30,7 @@ namespace Laboratory3 {
 		OleDbCommand^ cmd = gcnew OleDbCommand();
 	private: System::Windows::Forms::Label^ label13;
 	private: System::Windows::Forms::Label^ label14;
+	private: System::Windows::Forms::Label^ label15;
 	public:
 		OleDbDataAdapter^ da = gcnew OleDbDataAdapter();
 	protected:
@@ -137,6 +138,7 @@ namespace Laboratory3 {
 			this->label9 = (gcnew System::Windows::Forms::Label());
 			this->label10 = (gcnew System::Windows::Forms::Label());
 			this->label14 = (gcnew System::Windows::Forms::Label());
+			this->label15 = (gcnew System::Windows::Forms::Label());
 			this->panel3->SuspendLayout();
 			this->SuspendLayout();
 			// 
@@ -283,6 +285,7 @@ namespace Laboratory3 {
 			// panel3
 			// 
 			this->panel3->BackgroundImage = (cli::safe_cast<System::Drawing::Image^>(resources->GetObject(L"panel3.BackgroundImage")));
+			this->panel3->Controls->Add(this->label15);
 			this->panel3->Controls->Add(this->label13);
 			this->panel3->Controls->Add(this->errorMessage);
 			this->panel3->Controls->Add(this->panel6);
@@ -546,6 +549,18 @@ namespace Laboratory3 {
 			this->label14->Size = System::Drawing::Size(0, 20);
 			this->label14->TabIndex = 31;
 			// 
+			// label15
+			// 
+			this->label15->AutoSize = true;
+			this->label15->BackColor = System::Drawing::Color::Transparent;
+			this->label15->Font = (gcnew System::Drawing::Font(L"Modern No. 20", 2));
+			this->label15->ForeColor = System::Drawing::Color::Black;
+			this->label15->Location = System::Drawing::Point(3, 564);
+			this->label15->Name = L"label15";
+			this->label15->Size = System::Drawing::Size(15, 4);
+			this->label15->TabIndex = 32;
+			this->label15->Text = L"label15";
+			// 
 			// MyForm
 			// 
 			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::None;
@@ -618,6 +633,7 @@ namespace Laboratory3 {
 		con->Close();
 	}
 	private: System::Void label5_Click(System::Object^ sender, System::EventArgs^ e) {
+		label14->Text = "";
 		panel3->Show();
 	}
 	private: System::Void label10_Click(System::Object^ sender, System::EventArgs^ e) {
@@ -636,6 +652,7 @@ namespace Laboratory3 {
 	}
 	private: System::Void button4_Click(System::Object^ sender, System::EventArgs^ e) {
 		//Error Messages
+		errorMessage->Text = "";
 		if (tbFullname->Text == "" || tbUsername->Text == "" || tbPassword->Text == "" || tbConPassword->Text == "") {
 			errorMessage->Text = "*Please fill in empty fields...";
 		}
@@ -646,11 +663,13 @@ namespace Laboratory3 {
 		}
 		else if (tbPassword->Text == tbConPassword->Text) {
 			con->Open();
-			label13->Text = "SELECT * FROM tbl_users WHERE username= '" + tbUsername->Text + "'and password= '" + tbPassword->Text + "'";
-			cmd = gcnew OleDbCommand(label13->Text, con);
+			label15->Text = "SELECT * FROM tbl_users WHERE username= '" + tbUsername->Text + "'";
+			cmd = gcnew OleDbCommand(label15->Text, con);
 			OleDbDataReader^ dr = cmd->ExecuteReader();
 			if(dr->Read() == true){
-				MessageBox::Show("User already exists! Please try signing in.", "Register Failed", MessageBoxButtons::OK, MessageBoxIcon::Error);
+				MessageBox::Show("Username is already used! Please try another username.", "Register Failed", MessageBoxButtons::OK, MessageBoxIcon::Error);
+				dr->Close();
+				con->Close();
 			}
 			else{
 				dr->Close();
