@@ -1,5 +1,5 @@
 #pragma once
-#include <string>
+//#include <string>
 
 namespace Laboratory3 {
 
@@ -93,7 +93,7 @@ namespace Laboratory3 {
 		/// <summary>
 		/// Required designer variable.
 		/// </summary>
-		System::ComponentModel::Container ^components;
+		System::ComponentModel::Container^ components;
 
 #pragma region Windows Form Designer generated code
 		/// <summary>
@@ -592,81 +592,90 @@ namespace Laboratory3 {
 			textBox2->UseSystemPasswordChar = true;
 		}
 	}
-private: System::Void button2_Click(System::Object^ sender, System::EventArgs^ e) {
-	Application::Exit();
-}
-private: System::Void textBox2_TextChanged(System::Object^ sender, System::EventArgs^ e) {
-}
-private: System::Void button1_Click(System::Object^ sender, System::EventArgs^ e) {
-	con->Open();
-	label13->Text = "SELECT * FROM tbl_users WHERE username= '" + textBox1->Text + "' and password= '" + textBox2->Text + "'";
-	cmd = gcnew OleDbCommand(label13->Text, con);
-	OleDbDataReader^ dr = cmd->ExecuteReader();
-	if (textBox1->Text == "" || textBox2->Text == ""){
-		label14->Text = "*Please fill in the empty field/s.";
-	}
-	else if(dr->Read() == true){
-		label14->Text = "";
-		MessageBox::Show("You have successfully signed in!", "Success!", MessageBoxButtons::OK, MessageBoxIcon::None);
+	private: System::Void button2_Click(System::Object^ sender, System::EventArgs^ e) {
 		Application::Exit();
 	}
-	else {
-		MessageBox::Show("Invalid Username or Password! Please try again.", "Sign In Failed", MessageBoxButtons::OK, MessageBoxIcon::Error);
-		textBox1->Text == "";
-		textBox2->Text == "";
+	private: System::Void textBox2_TextChanged(System::Object^ sender, System::EventArgs^ e) {
 	}
-	con->Close();
-}
-private: System::Void label5_Click(System::Object^ sender, System::EventArgs^ e) {
-	panel3->Show();
-}
-private: System::Void label10_Click(System::Object^ sender, System::EventArgs^ e) {
-}
-private: System::Void label9_Click(System::Object^ sender, System::EventArgs^ e) {
-}
-private: System::Void label13_Click(System::Object^ sender, System::EventArgs^ e) {
-}
-private: System::Void button3_Click(System::Object^ sender, System::EventArgs^ e) {
-	Application::Exit();
-}
-private: System::Void panel3_Paint(System::Object^ sender, System::Windows::Forms::PaintEventArgs^ e) {
-}
-private: System::Void label6_Click(System::Object^ sender, System::EventArgs^ e) {
-	panel3->Hide();
-}
-private: System::Void button4_Click(System::Object^ sender, System::EventArgs^ e) {
-	//Error Messages
-	if(tbFullname->Text == "" || tbUsername->Text == "" || tbPassword->Text == "" || tbConPassword->Text == "") {
-		errorMessage->Text = "*Please fill in empty fields...";
-	}
-	else if (tbPassword->Text != tbConPassword->Text) {
-		errorMessage->Text = "Passwords doesn't match...";
-		tbPassword->Text = "";
-		tbConPassword->Text = "";
-	}
-	else if(tbPassword->Text == tbConPassword->Text){
+	private: System::Void button1_Click(System::Object^ sender, System::EventArgs^ e) {
 		con->Open();
-		label13->Text = "INSERT INTO tbl_users VALUES ('" + tbUsername->Text + "','" + tbPassword->Text + "')";
+		label13->Text = "SELECT * FROM tbl_users WHERE username= '" + textBox1->Text + "' and password= '" + textBox2->Text + "'";
 		cmd = gcnew OleDbCommand(label13->Text, con);
-		cmd->ExecuteNonQuery();
+		OleDbDataReader^ dr = cmd->ExecuteReader();
+		if (textBox1->Text == "" || textBox2->Text == "") {
+			label14->Text = "*Please fill in the empty field/s.";
+		}
+		else if (dr->Read() == true) {
+			label14->Text = "";
+			MessageBox::Show("You have successfully signed in!", "Success!", MessageBoxButtons::OK, MessageBoxIcon::None);
+			Application::Exit();
+		}
+		else {
+			MessageBox::Show("Invalid Username or Password! Please try again.", "Sign In Failed", MessageBoxButtons::OK, MessageBoxIcon::Error);
+			textBox1->Text == "";
+			textBox2->Text == "";
+		}
 		con->Close();
+	}
+	private: System::Void label5_Click(System::Object^ sender, System::EventArgs^ e) {
+		panel3->Show();
+	}
+	private: System::Void label10_Click(System::Object^ sender, System::EventArgs^ e) {
+	}
+	private: System::Void label9_Click(System::Object^ sender, System::EventArgs^ e) {
+	}
+	private: System::Void label13_Click(System::Object^ sender, System::EventArgs^ e) {
+	}
+	private: System::Void button3_Click(System::Object^ sender, System::EventArgs^ e) {
+		Application::Exit();
+	}
+	private: System::Void panel3_Paint(System::Object^ sender, System::Windows::Forms::PaintEventArgs^ e) {
+	}
+	private: System::Void label6_Click(System::Object^ sender, System::EventArgs^ e) {
 		panel3->Hide();
-		tbFullname->Text == "";
-		tbUsername->Text == "";
-		tbPassword->Text = "";
-		tbConPassword->Text = "";
 	}
-}
-private: System::Void checkBox2_CheckedChanged(System::Object^ sender, System::EventArgs^ e) {
-	if(checkBox2->Checked){
-		tbPassword->UseSystemPasswordChar = false;
-		tbConPassword->UseSystemPasswordChar = false;
+	private: System::Void button4_Click(System::Object^ sender, System::EventArgs^ e) {
+		//Error Messages
+		if (tbFullname->Text == "" || tbUsername->Text == "" || tbPassword->Text == "" || tbConPassword->Text == "") {
+			errorMessage->Text = "*Please fill in empty fields...";
+		}
+		else if (tbPassword->Text != tbConPassword->Text) {
+			errorMessage->Text = "Passwords doesn't match...";
+			tbPassword->Text = "";
+			tbConPassword->Text = "";
+		}
+		else if (tbPassword->Text == tbConPassword->Text) {
+			con->Open();
+			label13->Text = "SELECT * FROM tbl_users WHERE username= '" + tbUsername->Text + "'and password= '" + tbPassword->Text + "'";
+			cmd = gcnew OleDbCommand(label13->Text, con);
+			OleDbDataReader^ dr = cmd->ExecuteReader();
+			if(dr->Read() == true){
+				MessageBox::Show("User already exists! Please try signing in.", "Register Failed", MessageBoxButtons::OK, MessageBoxIcon::Error);
+			}
+			else{
+				dr->Close();
+				label13->Text = "INSERT INTO tbl_users VALUES ('" + tbUsername->Text + "','" + tbPassword->Text + "','" + tbFullname->Text + "')";
+				cmd = gcnew OleDbCommand(label13->Text, con);
+				cmd->ExecuteNonQuery();
+				con->Close();
+				panel3->Hide();
+				tbFullname->Text = "";
+				tbUsername->Text = "";
+				tbPassword->Text = "";
+				tbConPassword->Text = "";
+			}
+		}
 	}
-	else{
-		tbPassword->UseSystemPasswordChar = true;
-		tbConPassword->UseSystemPasswordChar = true;
+	private: System::Void checkBox2_CheckedChanged(System::Object^ sender, System::EventArgs^ e) {
+		if (checkBox2->Checked) {
+			tbPassword->UseSystemPasswordChar = false;
+			tbConPassword->UseSystemPasswordChar = false;
+		}
+		else {
+			tbPassword->UseSystemPasswordChar = true;
+			tbConPassword->UseSystemPasswordChar = true;
+		}
 	}
-}
 
-};
+	};
 }
